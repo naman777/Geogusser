@@ -66,7 +66,7 @@ const Signup = () => {
       />
 
       <div className="z-50">
-        <div className="mb-36">
+        <div className="mb-32">
           <Appbar />
         </div>
 
@@ -85,7 +85,6 @@ const Signup = () => {
           GEOGUESSER
         </h1>
 
-        {/* Input Fields */}
         <form className="mb-24 z-50" onSubmit={handleSubmit}>
           <div className="space-y-4 flex flex-col justify-center items-center z-50">
             <div>
@@ -177,8 +176,7 @@ const Signup = () => {
           </div>
         )}
 
-        {/* Loading Bar and Footer Image */}
-        <div className="mt-6 flex flex-col items-center">
+        <div className="mt-6 flex flex-col items-center mb-10">
           <div className="w-96 h-24 flex-shrink-0 relative">
             <Image src={footer} alt="Footer" layout="fill" objectFit="contain" />
           </div>

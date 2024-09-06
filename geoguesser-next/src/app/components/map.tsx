@@ -236,7 +236,7 @@ export default function MapComponent(props: MapComponentProps) {
     <div style={{ width: "100%", height: "500px" }}>
       <div
         ref={mapContainerRef}
-        style={{ width: "100%", height: "596px", borderRadius: "15px" }}
+        style={{ width: "100%", height: "500px", borderRadius: "15px" }}
       />
       {/* <ul>
         {visibleLabels.map((label, index) => (

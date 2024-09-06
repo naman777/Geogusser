@@ -226,7 +226,7 @@ const GamePage = () => {
       setMarkerLocation={setMarkerLocation}
     />
 
-    <div className="absolute bottom-4 right-4 w-[203px] h-[135px] z-20">
+    <div className="absolute bottom-4 right-4 w-[203px] h-[200px] z-20">
       <ImageViewer
         setImageTracker={setImageTracker}
         imageTracker={imageTracker}
@@ -235,8 +235,8 @@ const GamePage = () => {
     </div>
   </div>
         
-  <div className="flex justify-center mb-4 z-20">
-    <button className="flex w-[196px] px-[67px] py-[10px] justify-center items-center rounded-md bg-[#15A6DD] shadow-md hover:bg-[#035778]" onClick={handleFinish}>
+  <div className="flex justify-center mb-12 z-20">
+    <button className="flex w-[350px] px-[67px] py-[10px] justify-center items-center rounded-md bg-[#15A6DD] shadow-md hover:bg-[#035778]" onClick={handleFinish}>
       Finish
     </button>
   </div>

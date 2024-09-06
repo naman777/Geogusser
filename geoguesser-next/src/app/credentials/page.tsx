@@ -5,7 +5,7 @@ import { useState } from "react";
 import Navbar from "../components/navbar";
 import { useRouter } from "next/navigation";
 import { Sign } from "crypto";
-import Signup from "../components/Signup";
+import Signup from "../page";
 export default function Page() {
   const [formdata, setFormData] = useState({
     username: "",

@@ -1,233 +1,186 @@
-"use client";
-import { User } from "lucide-react";
+"use client"
+import React, { useState } from "react";
 import Image from "next/image";
-import Navbar from "./components/navbar";
-import StatCard from "./components/statCard";
-import ImageViewer from "./components/imageViewer";
-import MapComponent from "./components/map";
-import { useState, useEffect } from "react";
+import footer from "../../public/images/footer.png";
+import Appbar from "./components/Appbar";
+import  prismaConnect  from "@/db/prismaGenerate";
 import { useRouter } from "next/navigation";
+import { Router } from "lucide-react";
+import axios from "axios";
 
-interface ImageObject {
-  src: string;
-  index: number;
-  attachedLocation: {
-    latitude: number;
-    longitude: number;
-  };
-  inputLocation: {
-    latitude: number;
-    longitude: number;
-  };
-  score: number;
-}
-
-export default function Home() {
-  const [score, setScore] = useState(0);
-  const [time, setTime] = useState(600);
-  const [imageTracker, setImageTracker] = useState(0);
-  const [markerLocation, setMarkerLocation] = useState({
-    latitude: 0,
-    longitude: 0,
+const Signup = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    displayName: "",
+    applicationNumber: "",
+    email: "",
   });
-
-  const [imageObjects, setImageObjects] = useState<ImageObject[]>([
-    {
-      src: "https://source.unsplash.com/random/800x600",
-      index: 0,
-      attachedLocation: {
-        latitude: 30.356822708934217,
-        longitude: 76.36370500954598,
-      },
-      inputLocation: {
-        latitude: 0,
-        longitude: 0,
-      },
-      score: 0,
-    },
-    {
-      src: "https://source.unsplash.com/random/800x600",
-      index: 1,
-      attachedLocation: {
-        latitude: 30.356822708934217,
-        longitude: 76.36370500954598,
-      },
-      inputLocation: {
-        latitude: 0,
-        longitude: 0,
-      },
-      score: 0,
-    },
-    {
-      src: "https://source.unsplash.com/random/800x600",
-      index: 2,
-      attachedLocation: {
-        latitude: 30.356822708934217,
-        longitude: 76.36370500954598,
-      },
-      inputLocation: {
-        latitude: 0,
-        longitude: 0,
-      },
-      score: 0,
-    },
-  ]);
-
+  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
+  
   const router = useRouter();
-  const handleScoreUpdate = (imageObjectsTemp: ImageObject[]) => {
-    var score = 0;
-    imageObjectsTemp.forEach((imageObject) => {
-      score = score + imageObject.score;
-    });
-
-    setScore(score);
-    setMarkerLocation({
-      latitude: 0,
-      longitude: 0,
-    });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const { name, displayName, email } = formData;
+      
+      const res =
+      alert("User created successfully!");
+      router.push("/game")
+    } catch (err) {
+      console.log(err);
+      setError("Failed to create user");
+      // router.push("/game")
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const handleScoreCalculation = (imageObject: ImageObject) => {
-    console.log("Image Object", imageObject);
-
-    // Calculate distance using a larger scaling factor
-    const distance = Math.sqrt(
-      Math.pow(
-        imageObject.attachedLocation.latitude -
-          imageObject.inputLocation.latitude,
-        2
-      ) +
-        Math.pow(
-          imageObject.attachedLocation.longitude -
-            imageObject.inputLocation.longitude,
-          2
-        )
-    );
-
-    // Adjust sensitivity by scaling up the distance multiplier
-    const scaledDistance = distance * 100000;
-
-    // Calculate score with the adjusted distance
-    var score = Math.max(0, Math.floor(1000 - scaledDistance)) - 900;
-
-    score = score < 0 ? 0 : score;
-
-    imageObject.score = score;
-
-    setScore((prevScore) => prevScore + score);
-
-    var imageObjectsTemp;
-
-    setImageObjects((prevImageObjects) => {
-      const newImageObjects = prevImageObjects.map((prevImageObject) => {
-        if (prevImageObject.index === imageObject.index) {
-          return imageObject;
-        } else {
-          return prevImageObject;
-        }
-      });
-
-      imageObjectsTemp = newImageObjects;
-      handleScoreUpdate(newImageObjects);
-      return newImageObjects;
-    });
-
-    console.log("Score", score, "Distance", distance);
-    return score;
-  };
-
-  const handleImageChange = (selectedIndex: number) => {
-    console.log("Image Changed handleImageChangepp", selectedIndex , imageTracker);
-    if (!imageObjects) {
-    }
-
-    const imageObject = imageObjects[selectedIndex];
-
-    if (!imageObject) {
-      console.log("No Image Found");
-      return;
-    }
-
-    if (markerLocation.latitude === 0 && markerLocation.longitude === 0) {
-      console.log("No Marker Location Found");
-      return;
-    }
-
-    imageObject.inputLocation = markerLocation
-      ? markerLocation
-      : imageObject.inputLocation;
-
-    console.log("Image Changed", selectedIndex);
-
-    handleScoreCalculation(imageObject);
-
-    console.log("Image Changed", selectedIndex);
-  };
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((time) => time - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const user = (localStorage.getItem("user") || "");
-    if (user == "") {
-      console.log("User", user);
-      router.push("/credentials");
-    }
-  }, []);
-
+  
   return (
-    <main
-      className="flex min-h-screen flex-col items-center justify-between p-0"
+    <div
+      className="relative flex flex-col items-center justify-center min-h-screen bg-[#121212]"
       style={{
-        backgroundColor: "#1E1E1E",
+        boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
       }}
     >
-      <Navbar />
-      <ImageViewer
-        setImageTracker={setImageTracker}
-        imageTracker={imageTracker}
-        handleImageChangeProp={handleImageChange}
+      <div
+        className="absolute inset-0 bg-center bg-no-repeat bg-cover opacity-25 z-10"
+        style={{
+          backgroundImage:
+            'url("https://s3-alpha-sig.figma.com/img/0ba5/388f/1c1edc96f7b02a20686bcd98d563db2e?Expires=1726444800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=mPvrCFK1XOIXXUeiu-vnqGeA6aRL-Trn4T4syv4adrenln4XrZPqOCmHK8S63K5xqQ8LdJi5EwdGIJYuSeF-PfXT9sUinnhMLKbpQ8wj-dUHj-6VM8ve9TbYq7O5RO7EVG5bIrYoep-LuOGiYMPWchhRgj~LVBO4~x2gs-qv-9ZScI23rdgj379w~VI1KVkA893lgiBL6BIkXcvqL213ruB4-HhkI2gAYmNNKqwgKbdQC2LQfbNndttTVeYaagvsABd06LkaD~UIwclTtu0ohHHegTpTUQ6Zqx-pmIyqTDv54O-0vEQWi94dhf3xUBOaHms0996xCf1Y2GL2ywMlzg__")',
+        }}
       />
-      {imageObjects.length === imageTracker+1 && (
-        <div className="w-full h-fit flex justify-end p-4">
-          <button
-            className=""
-            style={{
-              backgroundColor: "#6C63FF",
-              color: "#ffffff",
-              padding: "10px",
-              borderRadius: "10px",
-              border: "none",
-              margin: "10px",
-            }}
-            onClick={() => {
-              
-              
 
-            }}
-          >
-            Finish
-          </button>
+      <div className="z-50">
+        <div className="mb-36">
+          <Appbar />
         </div>
-      )}
 
-      <div className="h-1/2 p-6 w-full">
-        <MapComponent
-          selectedLocation={""}
-          view={""}
-          selectedValue={""}
-          selectedTime={""}
-          latitude={0}
-          longitude={0}
-          imageTracker={imageTracker}
-          setMarkerLocation={setMarkerLocation}
-        />
+        <h1
+          style={{
+            color: "#FFF",
+            textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+            fontFamily: '"CorporationGames", sans-serif',
+            fontSize: "40px",
+            fontWeight: "400",
+            lineHeight: "normal",
+            letterSpacing: "1.2px",
+          }}
+          className="text-center mb-6"
+        >
+          GEOGUESSER
+        </h1>
+
+        {/* Input Fields */}
+        <form className="mb-24 z-50" onSubmit={handleSubmit}>
+          <div className="space-y-4 flex flex-col justify-center items-center z-50">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-white text-sm font-medium"
+              >
+                Name:
+              </label>
+              <input
+                type="text"
+                id="name"
+                placeholder="Enter full name"
+                value={formData.name}
+                onChange={handleChange}
+                className="inline-flex p-[10px] items-center rounded-md border-3 border-[#494141] bg-white text-black z-20"
+                required
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="displayName"
+                className="block text-white text-sm font-medium"
+              >
+                Display Name:
+              </label>
+              <input
+                type="text"
+                id="displayName"
+                placeholder="Enter display name"
+                value={formData.displayName}
+                onChange={handleChange}
+                className="inline-flex p-[10px] items-center rounded-md border-3 border-[#494141] bg-white text-black"
+                required
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="applicationNumber"
+                className="block text-white text-sm font-medium"
+              >
+                Application number:
+              </label>
+              <input
+                type="text"
+                id="applicationNumber"
+                placeholder="Enter application number"
+                value={formData.applicationNumber}
+                onChange={handleChange}
+                className="inline-flex p-[10px] items-center rounded-md border-3 border-[#494141] bg-white text-black"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-white text-sm font-medium"
+              >
+                Email:
+              </label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter email"
+                value={formData.email}
+                onChange={handleChange}
+                className="inline-flex p-[10px] items-center rounded-md border-3 border-[#494141] bg-white text-black"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-center items-center">
+            <button
+              type="submit"
+              className="p-[10px] mt-4 w-[234px] bg-[#15A6DD] rounded-md text-white font-semibold leading-normal"
+              disabled={loading}
+            >
+              {loading ? "Joining..." : "Join"}
+            </button>
+          </div>
+        </form>
+
+        {error && (
+          <div className="text-red-500 text-center">
+            {error}
+          </div>
+        )}
+
+        {/* Loading Bar and Footer Image */}
+        <div className="mt-6 flex flex-col items-center">
+          <div className="w-96 h-24 flex-shrink-0 relative">
+            <Image src={footer} alt="Footer" layout="fill" objectFit="contain" />
+          </div>
+        </div>
       </div>
-
-      <StatCard score={score} time={time} />
-    </main>
+    </div>
   );
-}
+};
+
+export default Signup;

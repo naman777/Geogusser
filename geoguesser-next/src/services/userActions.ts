@@ -1,18 +1,17 @@
 "use server";
 
-import { prismaConnect } from "@/db/prismaGenerate";
+import  prismaConnect  from "@/db/prismaGenerate";
 
 export async function addUser(
   username: string,
   email: string,
-  password: string,
   displayName: string
 ) {
   const user = await prismaConnect.user.create({
     data: {
       name: username,
       email: email,
-      password: password,
+      password: "password",
       displayName: displayName,
     },
   });

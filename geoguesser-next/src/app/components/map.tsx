@@ -233,10 +233,10 @@ export default function MapComponent(props: MapComponentProps) {
   }, [props.imageTracker]);
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
+    <div style={{ width: "100%", height: "500px" }}>
       <div
         ref={mapContainerRef}
-        style={{ width: "100%", height: "300px", borderRadius: "15px" }}
+        style={{ width: "100%", height: "596px", borderRadius: "15px" }}
       />
       {/* <ul>
         {visibleLabels.map((label, index) => (

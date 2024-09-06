@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@font-face {
+  font-family: 'CorporationGames';
+  src: url('/fonts/CorporationGames.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'CorporationGames', sans-serif;
+}
+
+
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: #1E1E1E;

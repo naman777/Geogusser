@@ -2,11 +2,10 @@
 import Appbar from "../components/Appbar";
 import MapComponent from "../components/map";
 import ImageViewer from "../components/imageViewer";
-import { User } from "lucide-react";
-import Image from "next/image";
-import StatCard from "../components/statCard";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { finishGame } from "@/services/userActions";
 
 interface ImageObject {
     src: string;
@@ -87,6 +86,16 @@ const GamePage = () => {
       longitude: 0,
     });
   };
+
+  const handleFinish = async () => {
+    const userId = localStorage.getItem("userId");
+    const email = localStorage.getItem("email");
+    const name = localStorage.getItem("name");
+    const displayName = localStorage.getItem("displayName");
+
+    const Finish = await finishGame(userId!, email!, score);
+    router.push("/leaderboard");
+  }
 
   const handleScoreCalculation = (imageObject: ImageObject) => {
     console.log("Image Object", imageObject);
@@ -175,7 +184,7 @@ const GamePage = () => {
     const user = (localStorage.getItem("user") || "");
     if (user == "") {
       console.log("User", user);
-      router.push("/credentials");
+      // router.push("/credentials");
     }
   }, []);
     
@@ -227,7 +236,7 @@ const GamePage = () => {
   </div>
         
   <div className="flex justify-center mb-4 z-20">
-    <button className="flex w-[196px] px-[67px] py-[10px] justify-center items-center rounded-md bg-[#15A6DD] shadow-md hover:bg-[#035778]">
+    <button className="flex w-[196px] px-[67px] py-[10px] justify-center items-center rounded-md bg-[#15A6DD] shadow-md hover:bg-[#035778]" onClick={handleFinish}>
       Finish
     </button>
   </div>

@@ -3,10 +3,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import footer from "../../public/images/footer.png";
 import Appbar from "./components/Appbar";
-import  prismaConnect  from "@/db/prismaGenerate";
 import { useRouter } from "next/navigation";
-import { Router } from "lucide-react";
-import axios from "axios";
+import { addUser } from "@/services/userActions";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -32,9 +30,16 @@ const Signup = () => {
     
     try {
       const { name, displayName, email } = formData;
-      
-      const res =
-      alert("User created successfully!");
+      const user = await addUser(name, email, displayName);
+      if(user === "Game is not started"){
+        setError("Game is not started");
+        alert("Game is not started");
+        return;
+      }
+      localStorage.setItem("userId", user.id);
+      localStorage.setItem("displayName", user.displayName);
+      localStorage.setItem("name", user.name);
+      localStorage.setItem("email", user.email);
       router.push("/game")
     } catch (err) {
       console.log(err);

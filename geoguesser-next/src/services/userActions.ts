@@ -7,6 +7,17 @@ export async function addUser(
   email: string,
   displayName: string
 ) {
+
+  const isGameStarted = await prismaConnect.admin.findUnique({
+    where: {
+      email: "nkundra_be23@thapar.edu"
+    }
+  })
+
+  if(isGameStarted?.isGameStarted){
+    return "Game is not started";
+  }
+
   const user = await prismaConnect.user.create({
     data: {
       name: username,
@@ -18,14 +29,38 @@ export async function addUser(
   return user;
 }
 
-export async function updateUserScoreById(userId: string, score: number) {
-  const user = await prismaConnect.game.update({
-    where: {
-      id: userId,
-    },
-    data: {
+export async function finishGame(userId: string,userEmail:string, score: number) {
+  const user = await prismaConnect.game.create({
+    data:{
       score: score,
-    },
+      userId: userId,
+      userEmail: userEmail
+    }
   });
   return user;
+}
+
+export async function getLeaderBoard() {
+
+  const isTrue = await prismaConnect.admin.findUnique({
+    where: {
+      email: "nkundra_be23@thapar.edu"
+    },
+    
+  })
+
+  if(isTrue?.isleaderBoardVisible ){
+    return "LeaderBoard is not visible";
+  }
+
+  const games = await prismaConnect.game.findMany({
+    take: 10,
+    orderBy: {
+      score: "desc",
+    },
+    include: {
+      user: true,
+    },
+  });
+  return games;
 }

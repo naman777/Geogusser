@@ -1,10 +1,7 @@
 "use client";
 
-import { addUser } from "@/services/userActions";
 import { useState } from "react";
-import Navbar from "../components/navbar";
 import { useRouter } from "next/navigation";
-import { Sign } from "crypto";
 import Signup from "../page";
 export default function Page() {
   const [formdata, setFormData] = useState({

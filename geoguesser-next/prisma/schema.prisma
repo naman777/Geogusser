@@ -25,11 +25,19 @@ model Game {
 
 model User {
   id          String   @id @default(cuid())
-  email       String   @unique
+  email       String   
   password    String   
   name        String
   displayName String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   Game        Game[]
+}
+
+model Admin{
+  id          String   @id @default(cuid())
+  email       String   @unique
+  password    String   
+  isGameStarted Boolean @default(true)
+  isleaderBoardVisible Boolean @default(true)
 }
